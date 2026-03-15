@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Expense Tracker logo">
+  <defs>
+    <linearGradient id="bg" x1="8" x2="56" y1="8" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0f766e" />
+      <stop offset="1" stop-color="#14b8a6" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#bg)" />
+  <path d="M18 24c0-2.21 1.79-4 4-4h20c2.21 0 4 1.79 4 4v2H18v-2Zm0 6h28v10c0 2.21-1.79 4-4 4H22c-2.21 0-4-1.79-4-4V30Zm19 5a3 3 0 1 0 0 6h5v-6h-5Z" fill="#ecfeff" />
+  <path d="M23 48h18" stroke="#ecfeff" stroke-linecap="round" stroke-width="3" opacity="0.9" />
+</svg>

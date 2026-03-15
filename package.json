@@ -1,0 +1,17 @@
+{
+  "name": "expense-tracker-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Workspace helpers for the Expense Tracker frontend and backend apps.",
+  "scripts": {
+    "setup": "npm --prefix backend install && npm --prefix frontend install",
+    "install:all": "npm run setup",
+    "dev": "npm run setup && npx concurrently \"npm run start:backend\" \"npm run dev:frontend\"",
+    "start:frontend": "npm --prefix frontend start",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "start:backend": "npm --prefix backend start",
+    "dev:backend": "npm --prefix backend run dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "check:backend": "node --check backend/server.js && node --check backend/routes/transactions.js && node --check backend/models/Transaction.js"
+  }
+}
