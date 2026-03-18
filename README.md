@@ -41,7 +41,7 @@ Create `backend/.env` from `backend/.env.example`.
 ```env
 PORT=5000
 MONGODB_URI=mongodb://127.0.0.1:27017/expenseTracker
-CLIENT_ORIGIN=http://localhost:3000
+CLIENT_ORIGIN=http://localhost:3000,https://your-project.vercel.app,https://*.vercel.app
 ```
 
 ### Frontend

@@ -104,15 +104,26 @@ router.get("/summary", async (req, res, next) => {
 		let expense = 0
 
 		transactions.forEach((transaction) => {
-			const monthKey = transaction.date.toISOString().slice(0, 7)
+			const parsedDate = transaction.date instanceof Date ? transaction.date : new Date(transaction.date)
+
+			if (Number.isNaN(parsedDate.getTime())) {
+				return
+			}
+
+			const parsedAmount = Number(transaction.amount)
+			if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+				return
+			}
+
+			const monthKey = parsedDate.toISOString().slice(0, 7)
 			const monthEntry = monthlyMap.get(monthKey) || { month: monthKey, income: 0, expense: 0 }
 
 			if (transaction.type === "income") {
-				income += transaction.amount
-				monthEntry.income += transaction.amount
-			} else {
-				expense += transaction.amount
-				monthEntry.expense += transaction.amount
+				income += parsedAmount
+				monthEntry.income += parsedAmount
+			} else if (transaction.type === "expense") {
+				expense += parsedAmount
+				monthEntry.expense += parsedAmount
 			}
 
 			monthlyMap.set(monthKey, monthEntry)

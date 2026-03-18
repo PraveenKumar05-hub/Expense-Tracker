@@ -10,20 +10,50 @@ const configuredOrigins = (process.env.CLIENT_ORIGIN || "")
 	.map((value) => value.trim())
 	.filter(Boolean)
 
+const wildcardToRegex = (pattern) => {
+	const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+	return new RegExp(`^${escaped.replace(/\*/g, ".*")}$`)
+}
+
+const allowedOriginRegexes = configuredOrigins
+	.filter((origin) => origin.includes("*"))
+	.map((pattern) => wildcardToRegex(pattern))
+
+const allowedExactOrigins = configuredOrigins.filter((origin) => !origin.includes("*"))
+
+const runtimeVercelOrigin = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ""
+
+const isAllowedOrigin = (origin) => {
+	if (!origin) {
+		return true
+	}
+
+	if (configuredOrigins.length === 0) {
+		return true
+	}
+
+	if (runtimeVercelOrigin && origin === runtimeVercelOrigin) {
+		return true
+	}
+
+	if (allowedExactOrigins.includes(origin)) {
+		return true
+	}
+
+	return allowedOriginRegexes.some((regex) => regex.test(origin))
+}
+
 app.use(
 	cors({
 		origin: (origin, callback) => {
-			if (!origin || configuredOrigins.length === 0) {
+			if (isAllowedOrigin(origin)) {
 				callback(null, true)
 				return
 			}
 
-			if (configuredOrigins.includes(origin)) {
-				callback(null, true)
-				return
-			}
-
-			callback(new Error("Not allowed by CORS"))
+			const corsError = new Error("Not allowed by CORS")
+			corsError.status = 403
+			callback(corsError)
 		},
 	})
 )
