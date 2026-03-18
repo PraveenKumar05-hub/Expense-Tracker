@@ -1,10 +1,12 @@
-const dotenv = require("dotenv")
 const serverless = require("serverless-http")
 
 const app = require("../../backend/app")
 const { connectDatabase } = require("../../backend/lib/db")
 
-dotenv.config({ path: "backend/.env" })
+if (!process.env.NETLIFY) {
+	const dotenv = require("dotenv")
+	dotenv.config({ path: "backend/.env" })
+}
 
 const expressHandler = serverless(app, {
 	basePath: "/.netlify/functions/api",
