@@ -4,8 +4,10 @@ const app = require("../../backend/app")
 const { connectDatabase } = require("../../backend/lib/db")
 
 if (!process.env.NETLIFY) {
-	const dotenv = require("dotenv")
-	dotenv.config({ path: "backend/.env" })
+	if (process.env.NODE_ENV !== "production") {
+		const dotenv = require("dotenv")
+		dotenv.config({ path: "backend/.env" })
+	}
 }
 
 const expressHandler = serverless(app, {
