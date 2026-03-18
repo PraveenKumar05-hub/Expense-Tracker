@@ -8,10 +8,15 @@ const connectDatabase = async () => {
 	}
 
 	const isNetlifyRuntime = Boolean(process.env.NETLIFY)
-	const mongodbUri = process.env.MONGODB_URI || (isNetlifyRuntime ? "" : "mongodb://127.0.0.1:27017/expenseTracker")
+	const configuredMongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || ""
+	const mongodbUri = configuredMongoUri || (isNetlifyRuntime ? "" : "mongodb://127.0.0.1:27017/expenseTracker")
 
 	if (!mongodbUri) {
-		throw new Error("MONGODB_URI is not configured for this environment")
+		throw new Error("MONGODB_URI (or MONGO_URI) is not configured for this environment")
+	}
+
+	if (isNetlifyRuntime && /127\.0\.0\.1|localhost/.test(mongodbUri)) {
+		throw new Error("MONGODB_URI points to localhost, which is not reachable from Netlify")
 	}
 
 	cachedConnection = await mongoose.connect(mongodbUri, {

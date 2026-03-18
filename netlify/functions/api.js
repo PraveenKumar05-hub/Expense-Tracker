@@ -22,7 +22,8 @@ exports.handler = async (event, context) => {
 			statusCode: 500,
 			body: JSON.stringify({
 				success: false,
-				message: "Database connection failed",
+				message: "Database connection failed. Check MONGODB_URI and MongoDB network access settings.",
+				detail: error.message,
 			}),
 		}
 	}
