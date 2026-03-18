@@ -2,7 +2,7 @@ import axios from "axios"
 
 const API = axios.create({
 	baseURL: process.env.REACT_APP_API_URL || "/api",
-	timeout: 10000,
+	timeout: 20000,
 })
 
 const cleanParams = (params = {}) =>

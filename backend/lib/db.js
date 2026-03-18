@@ -7,13 +7,18 @@ const connectDatabase = async () => {
 		return cachedConnection
 	}
 
-	const mongodbUri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/expenseTracker"
+	const isNetlifyRuntime = Boolean(process.env.NETLIFY)
+	const mongodbUri = process.env.MONGODB_URI || (isNetlifyRuntime ? "" : "mongodb://127.0.0.1:27017/expenseTracker")
 
 	if (!mongodbUri) {
-		throw new Error("MONGODB_URI is not configured")
+		throw new Error("MONGODB_URI is not configured for this environment")
 	}
 
-	cachedConnection = await mongoose.connect(mongodbUri)
+	cachedConnection = await mongoose.connect(mongodbUri, {
+		serverSelectionTimeoutMS: 5000,
+		connectTimeoutMS: 10000,
+		maxPoolSize: 5,
+	})
 	return cachedConnection
 }
 
