@@ -1,0 +1,27 @@
+const dotenv = require("dotenv")
+const serverless = require("serverless-http")
+
+const app = require("../../backend/app")
+const { connectDatabase } = require("../../backend/lib/db")
+
+dotenv.config({ path: "backend/.env" })
+
+const expressHandler = serverless(app, {
+	basePath: "/.netlify/functions/api",
+})
+
+exports.handler = async (event, context) => {
+	try {
+		await connectDatabase()
+		return await expressHandler(event, context)
+	} catch (error) {
+		console.error("Database connection failed", error)
+		return {
+			statusCode: 500,
+			body: JSON.stringify({
+				success: false,
+				message: "Database connection failed",
+			}),
+		}
+	}
+}

@@ -21,7 +21,8 @@ const allowedOriginRegexes = configuredOrigins
 
 const allowedExactOrigins = configuredOrigins.filter((origin) => !origin.includes("*"))
 
-const runtimeVercelOrigin = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ""
+const runtimeNetlifyOrigin = process.env.URL || ""
+const runtimeNetlifyPreviewOrigin = process.env.DEPLOY_PRIME_URL || ""
 
 const isAllowedOrigin = (origin) => {
 	if (!origin) {
@@ -32,7 +33,11 @@ const isAllowedOrigin = (origin) => {
 		return true
 	}
 
-	if (runtimeVercelOrigin && origin === runtimeVercelOrigin) {
+	if (runtimeNetlifyOrigin && origin === runtimeNetlifyOrigin) {
+		return true
+	}
+
+	if (runtimeNetlifyPreviewOrigin && origin === runtimeNetlifyPreviewOrigin) {
 		return true
 	}
 

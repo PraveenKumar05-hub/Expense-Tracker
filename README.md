@@ -41,7 +41,7 @@ Create `backend/.env` from `backend/.env.example`.
 ```env
 PORT=5000
 MONGODB_URI=mongodb://127.0.0.1:27017/expenseTracker
-CLIENT_ORIGIN=http://localhost:3000,https://your-project.vercel.app,https://*.vercel.app
+CLIENT_ORIGIN=http://localhost:3000,https://your-project.netlify.app,https://*.netlify.app
 ```
 
 ### Frontend
@@ -136,44 +136,44 @@ npm run check:backend
 
 `npm run dev` starts both backend and frontend together from the root.
 
-## Deploy to Vercel
+## Deploy to Netlify
 
-This repository is configured for a single Vercel project deployment:
+This repository is configured for a single Netlify project deployment:
 
 - Static frontend build from `frontend/build`
-- Serverless backend function at `api/index.js`
+- Serverless backend function at `netlify/functions/api.js`
 
 ### 1. Push this repository to GitHub
 
 Keep `node_modules` and local `.env` files out of Git (already handled by `.gitignore`).
 
-### 2. Import the repo in Vercel
+### 2. Import the repo in Netlify
 
-1. Go to Vercel dashboard and click **Add New Project**.
+1. Go to Netlify dashboard and click **Add new site** -> **Import an existing project**.
 2. Import this GitHub repository.
-3. Vercel will detect `vercel.json` and use:
-  - Install Command: `npm run setup`
-  - Build Command: `npm --prefix frontend run build`
-  - Output Directory: `frontend/build`
+3. Netlify will use `netlify.toml` for:
+  - Build command: `npm run setup && npm --prefix frontend run build`
+  - Publish directory: `frontend/build`
+  - Functions directory: `netlify/functions`
 
-### 3. Set Vercel Environment Variables
+### 3. Set Netlify Environment Variables
 
-In Project Settings -> Environment Variables, add:
+In Site configuration -> Environment variables, add:
 
 - `MONGODB_URI` = your MongoDB Atlas connection string
-- `CLIENT_ORIGIN` = your Vercel frontend URL (example: `https://your-project.vercel.app`)
+- `CLIENT_ORIGIN` = your Netlify frontend URL (example: `https://your-project.netlify.app,https://*.netlify.app`)
 
-`REACT_APP_API_URL` is optional for Vercel in this setup, because frontend and backend share the same domain and `/api` routing.
+`REACT_APP_API_URL` is optional in this setup, because frontend and backend share the same domain and `/api` routing.
 
 ### 4. Redeploy
 
-Deploy from Vercel dashboard or push a new commit.
+Deploy from Netlify dashboard or push a new commit.
 
 ### 5. Verify production
 
 Check:
 
-- `https://your-project.vercel.app/api/health`
+- `https://your-project.netlify.app/api/health`
 - App dashboard loads and CRUD requests succeed
 
 ## API Endpoints
