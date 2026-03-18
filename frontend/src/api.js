@@ -10,8 +10,16 @@ const cleanParams = (params = {}) =>
 
 const unwrapData = (response) => response.data.data
 
-export const getErrorMessage = (error) =>
-	error?.response?.data?.message || error?.message || "Something went wrong"
+export const getErrorMessage = (error) => {
+	const message = error?.response?.data?.message || error?.message || "Something went wrong"
+	const detail = error?.response?.data?.detail
+
+	if (detail) {
+		return `${message} (${detail})`
+	}
+
+	return message
+}
 
 export const getTransactions = async (params = {}) => {
 	const response = await API.get("/transactions", {

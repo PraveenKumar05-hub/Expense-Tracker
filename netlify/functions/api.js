@@ -14,6 +14,18 @@ const expressHandler = serverless(app, {
 	basePath: "/.netlify/functions/api",
 })
 
+const getMongoHost = () => {
+	const rawUri = process.env.MONGODB_URI || process.env.MONGO_URI || ""
+
+	if (!rawUri) {
+		return "not-set"
+	}
+
+	const withoutProtocol = rawUri.replace(/^mongodb(\+srv)?:\/\//, "")
+	const withoutCredentials = withoutProtocol.includes("@") ? withoutProtocol.split("@")[1] : withoutProtocol
+	return withoutCredentials.split("/")[0] || "unknown-host"
+}
+
 exports.handler = async (event, context) => {
 	try {
 		await connectDatabase()
@@ -26,6 +38,12 @@ exports.handler = async (event, context) => {
 				success: false,
 				message: "Database connection failed. Check MONGODB_URI and MongoDB network access settings.",
 				detail: error.message,
+				diagnostics: {
+					hasMONGODB_URI: Boolean(process.env.MONGODB_URI),
+					hasMONGO_URI: Boolean(process.env.MONGO_URI),
+					mongoHost: getMongoHost(),
+					netlifyContext: process.env.CONTEXT || "unknown",
+				},
 			}),
 		}
 	}
