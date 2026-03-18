@@ -49,8 +49,10 @@ CLIENT_ORIGIN=http://localhost:3000
 Create `frontend/.env` from `frontend/.env.example`.
 
 ```env
-REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_API_URL=/api
 ```
+
+For local development, the frontend uses the CRA proxy (`http://localhost:5000`) when `REACT_APP_API_URL` is not set.
 
 ## Installation
 
@@ -133,6 +135,46 @@ npm run check:backend
 ```
 
 `npm run dev` starts both backend and frontend together from the root.
+
+## Deploy to Vercel
+
+This repository is configured for a single Vercel project deployment:
+
+- Static frontend build from `frontend/build`
+- Serverless backend function at `api/index.js`
+
+### 1. Push this repository to GitHub
+
+Keep `node_modules` and local `.env` files out of Git (already handled by `.gitignore`).
+
+### 2. Import the repo in Vercel
+
+1. Go to Vercel dashboard and click **Add New Project**.
+2. Import this GitHub repository.
+3. Vercel will detect `vercel.json` and use:
+  - Install Command: `npm run setup`
+  - Build Command: `npm --prefix frontend run build`
+  - Output Directory: `frontend/build`
+
+### 3. Set Vercel Environment Variables
+
+In Project Settings -> Environment Variables, add:
+
+- `MONGODB_URI` = your MongoDB Atlas connection string
+- `CLIENT_ORIGIN` = your Vercel frontend URL (example: `https://your-project.vercel.app`)
+
+`REACT_APP_API_URL` is optional for Vercel in this setup, because frontend and backend share the same domain and `/api` routing.
+
+### 4. Redeploy
+
+Deploy from Vercel dashboard or push a new commit.
+
+### 5. Verify production
+
+Check:
+
+- `https://your-project.vercel.app/api/health`
+- App dashboard loads and CRUD requests succeed
 
 ## API Endpoints
 
