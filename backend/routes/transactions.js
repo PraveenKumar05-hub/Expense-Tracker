@@ -4,6 +4,20 @@ const Transaction = require("../models/Transaction")
 
 const allowedTypes = new Set(["income", "expense"])
 
+const normalizeType = (value) => {
+	const normalized = typeof value === "string" ? value.trim().toLowerCase() : ""
+
+	if (["income", "credit"].includes(normalized)) {
+		return "income"
+	}
+
+	if (["expense", "debit"].includes(normalized)) {
+		return "expense"
+	}
+
+	return ""
+}
+
 const buildError = (message, status = 400) => {
 	const error = new Error(message)
 	error.status = status
@@ -11,7 +25,7 @@ const buildError = (message, status = 400) => {
 }
 
 const normalizeTransactionPayload = (payload = {}) => {
-	const type = typeof payload.type === "string" ? payload.type.trim().toLowerCase() : ""
+	const type = normalizeType(payload.type || payload.transactionType)
 	const category = typeof payload.category === "string" ? payload.category.trim() : ""
 	const description = typeof payload.description === "string" ? payload.description.trim() : ""
 	const amount = Number(payload.amount)

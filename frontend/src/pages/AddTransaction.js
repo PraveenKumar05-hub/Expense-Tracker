@@ -16,6 +16,20 @@ const categorySuggestions = {
 	expense: ["Food", "Transport", "Rent", "Utilities", "Shopping", "Health", "Entertainment"],
 }
 
+const normalizeType = (value) => {
+	const normalized = typeof value === "string" ? value.trim().toLowerCase() : ""
+
+	if (["income", "credit"].includes(normalized)) {
+		return "income"
+	}
+
+	if (["expense", "debit"].includes(normalized)) {
+		return "expense"
+	}
+
+	return "expense"
+}
+
 function AddTransaction() {
 	const navigate = useNavigate()
 	const { id } = useParams()
@@ -46,7 +60,7 @@ function AddTransaction() {
 				}
 
 				const nextFormState = {
-					type: transaction.type,
+					type: normalizeType(transaction.type),
 					amount: String(transaction.amount),
 					category: transaction.category,
 					description: transaction.description || "",
@@ -78,6 +92,10 @@ function AddTransaction() {
 	const validateForm = () => {
 		const nextErrors = {}
 
+		if (!["income", "expense"].includes(normalizeType(form.type))) {
+			nextErrors.type = "Type is required"
+		}
+
 		if (!form.category.trim()) {
 			nextErrors.category = "Category is required"
 		}
@@ -99,10 +117,11 @@ function AddTransaction() {
 
 	const handleChange = (event) => {
 		const { name, value } = event.target
+		const nextValue = name === "type" ? normalizeType(value) : value
 
 		setForm((current) => ({
 			...current,
-			[name]: value,
+			[name]: nextValue,
 		}))
 
 		setErrors((current) => {
@@ -131,6 +150,7 @@ function AddTransaction() {
 
 		const payload = {
 			...form,
+			type: normalizeType(form.type),
 			amount: Number(form.amount),
 			category: form.category.trim(),
 			description: form.description.trim(),
@@ -189,6 +209,7 @@ function AddTransaction() {
 									<option value="expense">Expense</option>
 									<option value="income">Income</option>
 								</select>
+								{errors.type ? <span className="field-error">{errors.type}</span> : null}
 							</label>
 
 							<label className="field-shell">
