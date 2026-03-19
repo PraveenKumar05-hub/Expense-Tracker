@@ -128,11 +128,11 @@ function Transactions() {
 			await deleteTransaction(id)
 			const [updated] = await Promise.all([
 				getTransactions({
-				search: deferredSearch,
-				type: filters.type,
-				category: filters.category,
-				startDate: filters.startDate,
-				endDate: filters.endDate,
+					search: deferredSearch,
+					type: filters.type,
+					category: filters.category,
+					startDate: filters.startDate,
+					endDate: filters.endDate,
 				}),
 				syncCategories(),
 			])
@@ -145,18 +145,18 @@ function Transactions() {
 	}
 
 	return (
-		<div className="space-y-6">
-			<section className="surface-card p-6 sm:p-8">
-				<div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-					<div className="space-y-2">
-						<p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Transaction history</p>
-						<h1 className="text-3xl font-semibold tracking-tight text-[var(--text-primary)]">Search, filter, edit, and manage your ledger</h1>
-						<p className="max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
+		<div className="page-stack">
+			<section className="surface-card section-card">
+				<div className="section-head split-head">
+					<div>
+						<p className="meta-label">Transaction history</p>
+						<h1 className="section-title">Search, filter, edit, and manage your ledger</h1>
+						<p className="section-subtitle wide-copy">
 							Filter the collection by category, type, keywords, or date range, then jump straight into edits when something looks off.
 						</p>
 					</div>
 
-					<Link to="/add" className="button-primary inline-flex items-center gap-2 self-start lg:self-auto">
+					<Link to="/add" className="button-primary icon-button">
 						<FiPlus />
 						Add transaction
 					</Link>
@@ -166,24 +166,24 @@ function Transactions() {
 			{notice ? <div className="status-banner status-banner-success">{notice}</div> : null}
 			{error ? <div className="status-banner status-banner-error">{error}</div> : null}
 
-			<section className="surface-card p-6">
-				<div className="mb-5 flex items-center gap-2 text-[var(--text-primary)]">
+			<section className="surface-card section-card">
+				<div className="section-head icon-head">
 					<FiFilter />
-					<h2 className="text-lg font-semibold">Filters</h2>
+					<h2 className="section-title">Filters</h2>
 				</div>
 
-				<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-					<label className="field-shell xl:col-span-2">
+				<div className="filters-grid">
+					<label className="field-shell search-field">
 						<span className="field-label">Search</span>
-						<div className="relative">
-							<FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+						<div className="search-wrap">
+							<FiSearch className="search-icon" />
 							<input
 								type="search"
 								name="search"
 								value={filters.search}
 								onChange={handleFilterChange}
 								placeholder="Category or description"
-								className="input-shell pl-11"
+								className="input-shell input-search"
 							/>
 						</div>
 					</label>
@@ -209,12 +209,12 @@ function Transactions() {
 						</select>
 					</label>
 
-					<button type="button" onClick={() => setFilters(initialFilters)} className="button-secondary mt-auto">
+					<button type="button" onClick={() => setFilters(initialFilters)} className="button-secondary filter-reset-btn">
 						Clear filters
 					</button>
 				</div>
 
-				<div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+				<div className="filters-subgrid">
 					<label className="field-shell">
 						<span className="field-label">Start date</span>
 						<input type="date" name="startDate" value={filters.startDate} onChange={handleFilterChange} className="input-shell" />
@@ -225,56 +225,56 @@ function Transactions() {
 						<input type="date" name="endDate" value={filters.endDate} onChange={handleFilterChange} className="input-shell" />
 					</label>
 
-					<article className="rounded-3xl border border-[var(--border)] bg-[var(--surface-strong)] p-4 shadow-sm">
-						<p className="text-sm text-[var(--text-muted)]">Filtered income</p>
-						<p className="mt-2 text-2xl font-semibold text-emerald-600">{formatCurrency(filteredIncome)}</p>
+					<article className="stat-card">
+						<p className="meta-label">Filtered income</p>
+						<p className="stat-value income-text">{formatCurrency(filteredIncome)}</p>
 					</article>
 
-					<article className="rounded-3xl border border-[var(--border)] bg-[var(--surface-strong)] p-4 shadow-sm">
-						<p className="text-sm text-[var(--text-muted)]">Filtered balance</p>
-						<p className="mt-2 text-2xl font-semibold text-[var(--text-primary)]">{formatCurrency(filteredIncome - filteredExpense)}</p>
+					<article className="stat-card">
+						<p className="meta-label">Filtered balance</p>
+						<p className="stat-value">{formatCurrency(filteredIncome - filteredExpense)}</p>
 					</article>
 				</div>
 			</section>
 
-			<section className="surface-card overflow-hidden p-0">
-				<div className="hidden overflow-x-auto lg:block">
-					<table className="min-w-full text-left">
-						<thead className="border-b border-[var(--border)] bg-[var(--surface-strong)] text-sm text-[var(--text-muted)]">
+			<section className="surface-card transactions-table-shell">
+				<div className="desktop-table">
+					<table className="transactions-table">
+						<thead className="table-head">
 							<tr>
-								<th className="px-6 py-4 font-medium">Type</th>
-								<th className="px-6 py-4 font-medium">Category</th>
-								<th className="px-6 py-4 font-medium">Description</th>
-								<th className="px-6 py-4 font-medium">Date</th>
-								<th className="px-6 py-4 font-medium">Amount</th>
-								<th className="px-6 py-4 font-medium text-right">Actions</th>
+								<th className="table-cell-head">Type</th>
+								<th className="table-cell-head">Category</th>
+								<th className="table-cell-head">Description</th>
+								<th className="table-cell-head">Date</th>
+								<th className="table-cell-head">Amount</th>
+								<th className="table-cell-head table-cell-head-right">Actions</th>
 							</tr>
 						</thead>
 						<tbody>
 							{loading ? (
 								<tr>
-									<td colSpan="6" className="px-6 py-8 text-center text-sm text-[var(--text-muted)]">
+									<td colSpan="6" className="table-state-cell">
 										Loading transactions...
 									</td>
 								</tr>
 							) : transactions.length ? (
 								transactions.map((transaction) => (
-									<tr key={transaction._id} className="border-b border-[var(--border)] last:border-b-0">
-										<td className="px-6 py-4">
-											<span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${transaction.type === "income" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
+									<tr key={transaction._id} className="table-row">
+										<td className="table-cell">
+											<span className={`type-chip ${transaction.type === "income" ? "type-income" : "type-expense"}`}>
 												{transaction.type}
 											</span>
 										</td>
-										<td className="px-6 py-4 font-medium text-[var(--text-primary)]">{transaction.category}</td>
-										<td className="px-6 py-4 text-[var(--text-secondary)]">{transaction.description || "-"}</td>
-										<td className="px-6 py-4 text-[var(--text-secondary)]">{formatDate(transaction.date)}</td>
-										<td className={`px-6 py-4 font-semibold ${transaction.type === "income" ? "text-emerald-600" : "text-rose-600"}`}>
+										<td className="table-cell cell-strong">{transaction.category}</td>
+										<td className="table-cell cell-muted">{transaction.description || "-"}</td>
+										<td className="table-cell cell-muted">{formatDate(transaction.date)}</td>
+										<td className={`table-cell amount-cell ${transaction.type === "income" ? "income-text" : "expense-text"}`}>
 											{transaction.type === "income" ? "+" : "-"}
 											{formatCurrency(transaction.amount)}
 										</td>
-										<td className="px-6 py-4">
-											<div className="flex items-center justify-end gap-2">
-												<Link to={`/transactions/${transaction._id}/edit`} className="button-ghost inline-flex items-center gap-2 px-3 py-2 text-sm">
+										<td className="table-cell">
+											<div className="table-actions">
+												<Link to={`/transactions/${transaction._id}/edit`} className="button-ghost icon-button small-btn">
 													<FiEdit2 />
 													Edit
 												</Link>
@@ -282,7 +282,7 @@ function Transactions() {
 													type="button"
 													onClick={() => handleDelete(transaction._id)}
 													disabled={deletingId === transaction._id}
-													className="button-danger inline-flex items-center gap-2 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60"
+													className="button-danger icon-button small-btn"
 												>
 													<FiTrash2 />
 													{deletingId === transaction._id ? "Deleting..." : "Delete"}
@@ -293,7 +293,7 @@ function Transactions() {
 								))
 							) : (
 								<tr>
-									<td colSpan="6" className="px-6 py-10 text-center text-sm text-[var(--text-muted)]">
+									<td colSpan="6" className="table-state-cell">
 										No transactions match the current filters.
 									</td>
 								</tr>
@@ -302,32 +302,32 @@ function Transactions() {
 					</table>
 				</div>
 
-				<div className="grid gap-4 p-4 lg:hidden">
+				<div className="mobile-cards">
 					{loading ? (
 						<div className="empty-state">Loading transactions...</div>
 					) : transactions.length ? (
 						transactions.map((transaction) => (
-							<article key={transaction._id} className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm">
-								<div className="flex items-start justify-between gap-3">
+							<article key={transaction._id} className="mobile-card">
+								<div className="mobile-card-head">
 									<div>
-										<p className="text-lg font-semibold text-[var(--text-primary)]">{transaction.category}</p>
-										<p className="mt-1 text-sm text-[var(--text-secondary)]">{transaction.description || "No description"}</p>
+										<p className="mobile-card-title">{transaction.category}</p>
+										<p className="mobile-card-subtitle">{transaction.description || "No description"}</p>
 									</div>
-									<span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${transaction.type === "income" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
+									<span className={`type-chip ${transaction.type === "income" ? "type-income" : "type-expense"}`}>
 										{transaction.type}
 									</span>
 								</div>
 
-								<div className="mt-4 flex items-center justify-between gap-3 text-sm text-[var(--text-muted)]">
+								<div className="mobile-card-meta">
 									<span>{formatDate(transaction.date)}</span>
-									<span className={`text-base font-semibold ${transaction.type === "income" ? "text-emerald-600" : "text-rose-600"}`}>
+									<span className={`mobile-card-amount ${transaction.type === "income" ? "income-text" : "expense-text"}`}>
 										{transaction.type === "income" ? "+" : "-"}
 										{formatCurrency(transaction.amount)}
 									</span>
 								</div>
 
-								<div className="mt-4 flex flex-wrap gap-2">
-									<Link to={`/transactions/${transaction._id}/edit`} className="button-ghost inline-flex items-center gap-2 px-3 py-2 text-sm">
+								<div className="mobile-card-actions">
+									<Link to={`/transactions/${transaction._id}/edit`} className="button-ghost icon-button small-btn">
 										<FiEdit2 />
 										Edit
 									</Link>
@@ -335,7 +335,7 @@ function Transactions() {
 										type="button"
 										onClick={() => handleDelete(transaction._id)}
 										disabled={deletingId === transaction._id}
-										className="button-danger inline-flex items-center gap-2 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60"
+										className="button-danger icon-button small-btn"
 									>
 										<FiTrash2 />
 										{deletingId === transaction._id ? "Deleting..." : "Delete"}

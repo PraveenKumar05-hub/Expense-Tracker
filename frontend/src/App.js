@@ -23,25 +23,25 @@ function App() {
 
 	return (
 		<BrowserRouter>
-			<div className="min-h-screen">
-				<header className="sticky top-0 z-20 border-b border-white/10 bg-[var(--surface-strong)] backdrop-blur-xl">
-					<div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-						<div className="flex items-center gap-3">
-							<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent)] text-lg font-semibold text-white shadow-lg shadow-black/10">
+			<div className="app-shell">
+				<header className="topbar">
+					<div className="topbar-inner">
+						<div className="brand-row">
+							<div className="brand-badge">
 								ET
 							</div>
 							<div>
-								<Link to="/" className="text-lg font-semibold tracking-tight text-[var(--text-primary)]">
+								<Link to="/" className="brand-title">
 									Expense Tracker
 								</Link>
-								<p className="text-sm text-[var(--text-muted)]">
+								<p className="brand-subtitle">
 									Monitor cash flow, trends, and transaction history from one place.
 								</p>
 							</div>
 						</div>
 
-						<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-							<nav className="flex flex-wrap items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] p-1.5 shadow-sm">
+						<div className="topbar-actions">
+							<nav className="main-nav">
 								<NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
 									Dashboard
 								</NavLink>
@@ -53,8 +53,8 @@ function App() {
 								</NavLink>
 							</nav>
 
-							<div className="flex items-center gap-2">
-								<Link to="/add" className="button-primary inline-flex items-center gap-2">
+							<div className="quick-actions">
+								<Link to="/add" className="button-primary icon-button">
 									<FiPlus />
 									New Entry
 								</Link>
@@ -66,7 +66,7 @@ function App() {
 					</div>
 				</header>
 
-				<main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+				<main className="page-container">
 					<Routes>
 						<Route path="/" element={<Dashboard />} />
 						<Route path="/add" element={<AddTransaction />} />

@@ -76,23 +76,23 @@ function Dashboard() {
 	]
 
 	return (
-		<div className="space-y-6">
-			<section className="surface-card overflow-hidden p-6 sm:p-8">
-				<div className="grid gap-8 lg:grid-cols-[1.5fr_1fr] lg:items-center">
-					<div className="space-y-4">
-						<span className="inline-flex rounded-full bg-white/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)] shadow-sm">
+		<div className="page-stack">
+			<section className="surface-card hero-card">
+				<div className="hero-grid">
+					<div className="hero-content">
+						<span className="hero-tag">
 							Financial Overview
 						</span>
-						<div className="space-y-3">
-							<h1 className="text-3xl font-semibold tracking-tight text-[var(--text-primary)] sm:text-4xl">
+						<div>
+							<h1 className="hero-title">
 								See where your money is moving before it surprises you.
 							</h1>
-							<p className="max-w-2xl text-sm leading-6 text-[var(--text-secondary)] sm:text-base">
+							<p className="hero-copy">
 								Track spending patterns, compare income against expenses, and surface recent activity with a cleaner workflow.
 							</p>
 						</div>
-						<div className="flex flex-wrap items-center gap-3">
-							<Link to="/add" className="button-primary inline-flex items-center gap-2">
+						<div className="hero-actions">
+							<Link to="/add" className="button-primary icon-button">
 								Add transaction
 								<FiArrowRight />
 							</Link>
@@ -102,26 +102,26 @@ function Dashboard() {
 						</div>
 					</div>
 
-					<div className="grid gap-3 rounded-[28px] border border-[var(--border)] bg-[var(--surface-strong)] p-4 shadow-inner shadow-black/5 sm:grid-cols-3 lg:grid-cols-1">
+					<div className="hero-aside">
 						<div>
-							<p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">
+							<p className="meta-label">
 								Transactions logged
 							</p>
-							<p className="mt-2 text-3xl font-semibold text-[var(--text-primary)]">{summary.totals.count}</p>
+							<p className="meta-value">{summary.totals.count}</p>
 						</div>
 						<div>
-							<p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">
+							<p className="meta-label">
 								Top expense category
 							</p>
-							<p className="mt-2 text-lg font-medium text-[var(--text-primary)]">
+							<p className="meta-text">
 								{transactions.find((transaction) => transaction.type === "expense")?.category || "No expenses yet"}
 							</p>
 						</div>
 						<div>
-							<p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">
+							<p className="meta-label">
 								Active period
 							</p>
-							<p className="mt-2 text-lg font-medium text-[var(--text-primary)]">
+							<p className="meta-text">
 								{summary.monthly[0] ? formatMonthLabel(summary.monthly[0].month) : "No data"}
 							</p>
 						</div>
@@ -131,57 +131,57 @@ function Dashboard() {
 
 			{error ? <div className="status-banner status-banner-error">{error}</div> : null}
 
-			<section className="grid gap-4 md:grid-cols-3">
+			<section className="metrics-grid">
 				{metrics.map((metric) => (
-					<article key={metric.label} className={`metric-card ${metric.tone} ${loading ? "animate-pulse" : ""}`}>
-						<div className="flex items-center justify-between gap-3">
+					<article key={metric.label} className={`metric-card ${metric.tone} ${loading ? "loading" : ""}`}>
+						<div className="metric-header">
 							<div>
-								<p className="text-sm font-medium text-white/80">{metric.label}</p>
-								<p className="mt-3 text-3xl font-semibold text-white">{loading ? "Loading..." : metric.value}</p>
+								<p className="metric-label">{metric.label}</p>
+								<p className="metric-value">{loading ? "Loading..." : metric.value}</p>
 							</div>
-							<div className="rounded-2xl bg-white/15 p-3 text-2xl text-white">{metric.icon}</div>
+							<div className="metric-icon">{metric.icon}</div>
 						</div>
-						<p className="mt-4 text-sm text-white/80">{metric.description}</p>
+						<p className="metric-description">{metric.description}</p>
 					</article>
 				))}
 			</section>
 
-			<section className="grid gap-6 xl:grid-cols-[1.3fr_0.9fr]">
+			<section className="split-grid">
 				<ExpenseChart transactions={transactions} loading={loading} />
 				<RecentTransactions transactions={transactions} loading={loading} />
 			</section>
 
-			<section className="surface-card p-6">
-				<div className="mb-5 flex items-center justify-between gap-3">
+			<section className="surface-card section-card">
+				<div className="section-head">
 					<div>
-						<h2 className="text-xl font-semibold text-[var(--text-primary)]">Monthly summaries</h2>
-						<p className="mt-1 text-sm text-[var(--text-muted)]">Compare how income and expenses are trending month over month.</p>
+						<h2 className="section-title">Monthly summaries</h2>
+						<p className="section-subtitle">Compare how income and expenses are trending month over month.</p>
 					</div>
 				</div>
 
 				{loading ? (
-					<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+					<div className="monthly-grid">
 						{Array.from({ length: 4 }).map((_, index) => (
-							<div key={index} className="h-32 animate-pulse rounded-3xl bg-[var(--surface-strong)]" />
+							<div key={index} className="skeleton-card" />
 						))}
 					</div>
 				) : summary.monthly.length ? (
-					<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+					<div className="monthly-grid">
 						{summary.monthly.slice(0, 4).map((item) => (
-							<article key={item.month} className="rounded-3xl border border-[var(--border)] bg-[var(--surface-strong)] p-5 shadow-sm">
-								<p className="text-sm font-semibold text-[var(--text-primary)]">{formatMonthLabel(item.month)}</p>
-								<div className="mt-4 space-y-3 text-sm text-[var(--text-secondary)]">
-									<div className="flex items-center justify-between gap-3">
+							<article key={item.month} className="monthly-card">
+								<p className="monthly-title">{formatMonthLabel(item.month)}</p>
+								<div className="monthly-rows">
+									<div className="monthly-row">
 										<span>Income</span>
-										<span className="font-semibold text-emerald-600">{formatCurrency(item.income)}</span>
+										<span className="income-text">{formatCurrency(item.income)}</span>
 									</div>
-									<div className="flex items-center justify-between gap-3">
+									<div className="monthly-row">
 										<span>Expense</span>
-										<span className="font-semibold text-rose-600">{formatCurrency(item.expense)}</span>
+										<span className="expense-text">{formatCurrency(item.expense)}</span>
 									</div>
-									<div className="flex items-center justify-between gap-3 border-t border-[var(--border)] pt-3 text-[var(--text-primary)]">
+									<div className="monthly-row total-row">
 										<span>Balance</span>
-										<span className="font-semibold">{formatCurrency(item.income - item.expense)}</span>
+										<span className="total-text">{formatCurrency(item.income - item.expense)}</span>
 									</div>
 								</div>
 							</article>

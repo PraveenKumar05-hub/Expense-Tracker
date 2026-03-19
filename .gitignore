@@ -26,6 +26,3 @@ yarn-error.log*
 # OS and editor files
 .DS_Store
 Thumbs.db
-
-# Netlify local state
-.netlify/

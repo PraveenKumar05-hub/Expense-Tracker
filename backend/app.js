@@ -21,23 +21,12 @@ const allowedOriginRegexes = configuredOrigins
 
 const allowedExactOrigins = configuredOrigins.filter((origin) => !origin.includes("*"))
 
-const runtimeNetlifyOrigin = process.env.URL || ""
-const runtimeNetlifyPreviewOrigin = process.env.DEPLOY_PRIME_URL || ""
-
 const isAllowedOrigin = (origin) => {
 	if (!origin) {
 		return true
 	}
 
 	if (configuredOrigins.length === 0) {
-		return true
-	}
-
-	if (runtimeNetlifyOrigin && origin === runtimeNetlifyOrigin) {
-		return true
-	}
-
-	if (runtimeNetlifyPreviewOrigin && origin === runtimeNetlifyPreviewOrigin) {
 		return true
 	}
 

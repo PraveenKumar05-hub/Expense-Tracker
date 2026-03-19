@@ -51,29 +51,29 @@ function ExpenseChart({ transactions, loading }) {
 	}
 
 	return (
-		<section className="surface-card p-6">
-			<div className="mb-5 flex items-center justify-between gap-3">
+		<section className="surface-card section-card">
+			<div className="section-head">
 				<div>
-					<h2 className="text-xl font-semibold text-[var(--text-primary)]">Expense distribution</h2>
-					<p className="mt-1 text-sm text-[var(--text-muted)]">See which categories are driving spending.</p>
+					<h2 className="section-title">Expense distribution</h2>
+					<p className="section-subtitle">See which categories are driving spending.</p>
 				</div>
 			</div>
 
 			{loading ? (
-				<div className="h-[360px] animate-pulse rounded-[32px] bg-[var(--surface-strong)]" />
+				<div className="chart-skeleton" />
 			) : labels.length ? (
-				<div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-					<div className="h-[320px]">
+				<div className="chart-grid">
+					<div className="chart-area">
 						<Doughnut data={data} options={options} />
 					</div>
-					<div className="space-y-3">
+					<div className="legend-list">
 						{labels.map((label, index) => (
-							<div key={label} className="flex items-center justify-between gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface-strong)] px-4 py-3 shadow-sm">
-								<div className="flex items-center gap-3">
-									<span className="h-3 w-3 rounded-full" style={{ backgroundColor: palette[index % palette.length] }} />
-									<span className="font-medium text-[var(--text-primary)]">{label}</span>
+							<div key={label} className="legend-item">
+								<div className="legend-left">
+									<span className="legend-dot" style={{ backgroundColor: palette[index % palette.length] }} />
+									<span className="legend-label">{label}</span>
 								</div>
-								<span className="text-sm font-semibold text-[var(--text-secondary)]">{formatCurrency(categoryTotals[label])}</span>
+								<span className="legend-value">{formatCurrency(categoryTotals[label])}</span>
 							</div>
 						))}
 					</div>
